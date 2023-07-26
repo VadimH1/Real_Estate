@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Announcement</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/announce.css' %}">
+    <link rel="stylesheet" href="{% static 'img/intro-bg.jpg' %}">
+
+</head>   
+<body>
+
+    <div class="topnav">
+        <a href="{% url 'index' %}"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="20" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
+            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
+            <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
+          </svg>  Home</a>
+    </div>
+
+    <div style="text-align:center;" class="content">
+        <div class="main">  	
+            <input type="checkbox" id="chk" aria-hidden="true">
+    
+                <div class="signup">
+                    <form>
+                        <label for="chk" aria-hidden="true">Announcement</label>
+                        <input type="text" name="header" id="headerAnnounce" placeholder="Header" required="">
+                        <textarea type="text" name="text" id="textAnnounce" placeholder="Text" required=""></textarea>        
+                        <form id="images" enctype="multipart/form-data">
+                            <input type="file" id="file" name="file">
+                        </form><br> 
+                        <!-- <form action="/media/" class="dropzone dz-clickable" id="file" name="file">
+                            <div class="dz-default dz-message">
+                                <button class="dz-button" type="button">Drop files here to upload</button>
+                            </div>
+                        </form> -->
+                        <button name="sendAnnounce" id="sendAnnounce">Send</button>
+                        <p style="visibility: hidden; color: red" id="errorRequiredFields">Required fields is empty</p>
+                    </form>
+                </div>
+    
+                <!-- <div class="login">
+                    <form>
+                        <label for="chk" aria-hidden="true">Login</label>
+                        <input type="email" name="email" placeholder="Email" required="">
+                        <input type="password" name="pswd" placeholder="Password" required="">
+                        <button>Login</button>
+                    </form>
+                </div> -->
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript">
+    // var imageId;
+$(document).ready(function(){    
+    $("#sentPostButton").on('click', function() {
+        var headeR = $("#headerAnnounce").val();
+        var texT = $("#textAnnounce").val();
+        // var formData = new FormData();
+        // var file = $('#file')[0].files[0];
+        // formData.append('file', file);
+        // var token = localStorage.getItem('token');
+        if ( headeR === "" || texT === "") {
+            $('#errorRequiredFields').css( "visibility", "visible" );
+            return
+        };
+        if (!file) {
+            $.ajax({
+                url: "{% url 'announcement' %}",
+                method: "POST",
+                headers: {"Authorization": token},
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({
+                    title: headeR,
+                    body: texT,
+                    // image_id: null
+                }),
+                success: function(result) {
+                    alert('Announce created without file');
+                    var url = "{% url 'index' %}";
+                    $(location).attr('href', url);
+                }
+            });
+        };
+    });
+});        
